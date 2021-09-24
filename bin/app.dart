@@ -11,6 +11,7 @@ import 'controllers/base_controller.dart';
 import 'exceptions/not_implemented_exception.dart';
 import 'http_verbs.dart';
 
+//Represents the application
 class App {
   String? ipAddress;
   String? port;
@@ -20,12 +21,13 @@ class App {
   App({this.ipAddress, this.port});
 
   final _router = Router();
-
+  
+  //Register a controller in the app
   registerController(BaseController controller) {
-    for (HttpVerbs verb in HttpVerbs.values) {
+    for (HttpVerbs verb in HttpVerbs.availableVerbs) {
       _checkHttpVerb(verb, controller);
       _router.add(
-          verb.toString(), controller.route, controller.onRequestReceived);
+          verb.value, controller.route, controller.onRequestReceived);
       _controllers.add(controller);
     }
   }
@@ -43,6 +45,7 @@ class App {
     return false;
   }
 
+  //Starts the server application
   start() async {
     final ip = ipAddress != null
         ? InternetAddress.fromRawAddress(

@@ -9,22 +9,17 @@ void main() {
   setUp(() async {
     await TestProcess.start(
       'dart',
-      ['run', 'bin/server.dart'],
+      ['run', 'test/test_server.dart'],
       environment: {'PORT': port},
     );
   });
 
-  test('Root', () async {
-    final response = await get(Uri.parse(host + '/'));
+  test('Hello World', () async {
+    final response = await get(Uri.parse(host + '/hello_world'));
     expect(response.statusCode, 200);
     expect(response.body, 'Hello, World!\n');
   });
 
-  test('Echo', () async {
-    final response = await get(Uri.parse(host + '/echo/hello'));
-    expect(response.statusCode, 200);
-    expect(response.body, 'hello\n');
-  });
   test('404', () async {
     final response = await get(Uri.parse(host + '/foobar'));
     expect(response.statusCode, 404);
