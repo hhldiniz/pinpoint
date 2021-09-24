@@ -1,6 +1,6 @@
 import 'package:shelf/shelf.dart';
 
-import 'base_controller.dart';
+import '../bin/controllers/base_controller.dart';
 
 class HelloWorldController extends BaseController {
   HelloWorldController(String route) : super(route);
