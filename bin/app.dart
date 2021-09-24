@@ -21,28 +21,13 @@ class App {
   App({this.ipAddress, this.port});
 
   final _router = Router();
-  
+
   //Register a controller in the app
   registerController(BaseController controller) {
     for (HttpVerbs verb in HttpVerbs.availableVerbs) {
-      _checkHttpVerb(verb, controller);
-      _router.add(
-          verb.value, controller.route, controller.onRequestReceived);
+      _router.add(verb.value, controller.route, controller.onRequestReceived);
       _controllers.add(controller);
     }
-  }
-
-  bool _checkHttpVerb(HttpVerbs httpVerb, BaseController targetController) {
-    try {
-      reflect(targetController).invoke(Symbol(httpVerb.toString()), []);
-      return true;
-    } on NotImplementedException catch (e) {
-      print(e.cause);
-    } catch (e) {
-      print("Unexpected error occured");
-      print(e);
-    }
-    return false;
   }
 
   //Starts the server application

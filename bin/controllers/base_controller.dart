@@ -25,18 +25,18 @@ abstract class BaseController {
   }
 
   Response get(Request request) {
-    throw NotImplementedException();
+    return Response(405);
   }
 
   Response post(Request request) {
-    throw NotImplementedException();
+    return Response(405);
   }
 
   Response delete(Request request) {
-    throw NotImplementedException();
+    return Response(405);
   }
 
   Response put(Request request) {
-    throw NotImplementedException();
+    return Response(405);
   }
 }
