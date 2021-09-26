@@ -1,7 +1,6 @@
 import 'package:shelf/shelf.dart';
 
 import '../exceptions/http_verb_not_supported.dart';
-import '../exceptions/not_implemented_exception.dart';
 import '../http_verbs.dart';
 
 abstract class BaseController {
@@ -9,7 +8,7 @@ abstract class BaseController {
 
   BaseController(this.route);
 
-  Response onRequestReceived(Request request) {
+  Future<Response> onRequestReceived(Request request) async {
     String incommingVerb = request.method.toLowerCase();
     if (incommingVerb == HttpVerbs.get.value) {
       return get(request);
@@ -24,19 +23,19 @@ abstract class BaseController {
     }
   }
 
-  Response get(Request request) {
+  Future<Response> get(Request request) async {
     return Response(405);
   }
 
-  Response post(Request request) {
+  Future<Response> post(Request request) async {
     return Response(405);
   }
 
-  Response delete(Request request) {
+  Future<Response> delete(Request request) async {
     return Response(405);
   }
 
-  Response put(Request request) {
+  Future<Response> put(Request request) async {
     return Response(405);
   }
 }

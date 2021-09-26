@@ -3,7 +3,3 @@ class SerializedField {
 
   const SerializedField(this.fieldName);
 }
-
-class SerializedModel {
-  const SerializedModel();
-}
