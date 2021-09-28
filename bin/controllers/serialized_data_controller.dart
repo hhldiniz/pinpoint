@@ -13,21 +13,25 @@ abstract class SerializedDataController<T> extends BaseController {
   @override
   Future<Response> post(Request request) async {
     var instanceOfGeneric = Activator.createInstance(T);
-    final DeclarationMirror clazzDeclaration = reflectClass(T);
-    final ClassMirror serializedFieldAnnotationMirror =
-        reflectClass(SerializedField);
-    final List<InstanceMirror> annotationInstsanceMirror = clazzDeclaration
-        .metadata;
 
-    for (var im in annotationInstsanceMirror) {
-      final serializedFieldInstance = (im.reflectee as SerializedField);
-      var body = jsonDecode(await request.readAsString());
+    final InstanceMirror classInstanceMirror = reflect(instanceOfGeneric);
 
-      try {
-        body.entries.firstWhere(
-            (element) => element.key == serializedFieldInstance.fieldName);
-      } catch (e) {
-        //IGNORE
+    final ClassMirror genericTypeMirror = classInstanceMirror.type;
+
+    for (var declaration in genericTypeMirror.declarations.entries) {
+      if (declaration.value is VariableMirror) {
+        VariableMirror vb = declaration.value as VariableMirror;
+        try {
+          var annotation = vb.metadata
+                  .firstWhere((element) => element.type is SerializedField)
+              as SerializedField;
+          Map<String, dynamic> mockedData =
+              jsonDecode("{'${vb.simpleName}': 'John'}");
+          genericTypeMirror.setField(
+              vb.simpleName, mockedData[annotation.fieldName ?? vb.simpleName]);
+        } catch (e) {
+          print(e);
+        }
       }
     }
     return postSerialized(request, instanceOfGeneric);

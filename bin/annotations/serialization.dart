@@ -1,5 +1,5 @@
 class SerializedField {
-  final String fieldName;
+  final String? fieldName;
 
   const SerializedField(this.fieldName);
 }
