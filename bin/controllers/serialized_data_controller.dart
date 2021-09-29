@@ -20,11 +20,11 @@ abstract class SerializedDataController<T> extends BaseController {
 
   @override
   Future<Response> post(Request request) async {
-    final ClassMirror genericTypeMirror = reflectClass(T);
+    final InstanceMirror genericTypeMirror =
+        reflect(Activator.createInstance(T));
 
-    late Symbol contructorSymbol;
-
-    for (var declaration in genericTypeMirror.declarations.values) {
+    for (var declaration
+        in genericTypeMirror.type.declarations.values.toList()) {
       if (declaration is VariableMirror) {
         try {
           var annotation = declaration.metadata
@@ -38,12 +38,9 @@ abstract class SerializedDataController<T> extends BaseController {
         } catch (e) {
           print(e);
         }
-      } else if (declaration is MethodMirror && declaration.isConstructor) {
-        contructorSymbol = declaration.constructorName;
       }
     }
-    return postSerialized(
-        request, instantiate(genericTypeMirror, contructorSymbol, []));
+    return postSerialized(request, genericTypeMirror.reflectee);
   }
 
   Future<Response> postSerialized(Request request, T model);
