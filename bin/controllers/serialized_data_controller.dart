@@ -10,31 +10,40 @@ import 'base_controller.dart';
 abstract class SerializedDataController<T> extends BaseController {
   SerializedDataController(String route) : super(route);
 
+  T instantiate(
+      ClassMirror classMirror, Symbol constructorName, List positional,
+      [Map<Symbol, dynamic>? named]) {
+    return classMirror
+        .newInstance(constructorName, positional, named ?? {})
+        .reflectee as T;
+  }
+
   @override
   Future<Response> post(Request request) async {
-    var instanceOfGeneric = Activator.createInstance(T);
+    final ClassMirror genericTypeMirror = reflectClass(T);
 
-    final InstanceMirror classInstanceMirror = reflect(instanceOfGeneric);
+    late Symbol contructorSymbol;
 
-    final ClassMirror genericTypeMirror = classInstanceMirror.type;
-
-    for (var declaration in genericTypeMirror.declarations.entries) {
-      if (declaration.value is VariableMirror) {
-        VariableMirror vb = declaration.value as VariableMirror;
+    for (var declaration in genericTypeMirror.declarations.values) {
+      if (declaration is VariableMirror) {
         try {
-          var annotation = vb.metadata
-                  .firstWhere((element) => element.type is SerializedField)
-              as SerializedField;
+          var annotation = declaration.metadata
+              .firstWhere((element) => element.reflectee is SerializedField)
+              .reflectee as SerializedField;
+          var fieldNameToSet = MirrorSystem.getName(declaration.simpleName);
           Map<String, dynamic> mockedData =
-              jsonDecode("{'${vb.simpleName}': 'John'}");
-          genericTypeMirror.setField(
-              vb.simpleName, mockedData[annotation.fieldName ?? vb.simpleName]);
+              jsonDecode("{\"$fieldNameToSet\": \"John\"}");
+          genericTypeMirror.setField(declaration.simpleName,
+              mockedData[annotation.fieldName ?? fieldNameToSet]);
         } catch (e) {
           print(e);
         }
+      } else if (declaration is MethodMirror && declaration.isConstructor) {
+        contructorSymbol = declaration.constructorName;
       }
     }
-    return postSerialized(request, instanceOfGeneric);
+    return postSerialized(
+        request, instantiate(genericTypeMirror, contructorSymbol, []));
   }
 
   Future<Response> postSerialized(Request request, T model);
