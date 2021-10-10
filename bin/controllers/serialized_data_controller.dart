@@ -23,14 +23,18 @@ abstract class SerializedDataController<T> extends BaseController {
       String rawBodyContent, ContentType contentType) {
     Map<String, String> parsedResult = {};
     if (contentType is FormData) {
-      var mainContentPattern = RegExp("name=\"\\w+\"", multiLine: true);
-      mainContentPattern.allMatches(rawBodyContent).forEach((match) {
-        var fieldName =
-            match.group(0)?.split("=")[1].replaceAll("\"", "") ?? "";
-        print(fieldName);
-      });
+      var mainContentPattern = RegExp("name=\"\\w+\"\\s+\\w+", multiLine: true);
+      parsedResult.addEntries(
+          mainContentPattern.allMatches(rawBodyContent).map((match) {
+        List<String> data = match.group(0)?.split(RegExp("\\n+")) ?? [];
+        String fieldName = RegExp("\\w+")
+                .stringMatch(data[0].split("=")[1]) ??
+            "";
+        String fieldValue =
+            RegExp("\\w+").stringMatch(data[2]) ?? "";
+        return MapEntry(fieldName, fieldValue);
+      }));
     } else if (contentType is XWWFormUrlEncoded) {
-      print(rawBodyContent);
       parsedResult.addEntries(rawBodyContent.split("&").map((e) {
         var aux = e.split("=");
         return MapEntry(aux[0], aux[1]);
@@ -46,9 +50,8 @@ abstract class SerializedDataController<T> extends BaseController {
     final InstanceMirror genericTypeMirror =
         reflect(Activator.createInstance(T));
 
-    Map<String, dynamic> parsedBodyData = _parseBodyData(
-              await bodyContentFuture,
-              ContentType.fromString(request.headers['content-type'] ?? ""));
+    Map<String, String> parsedBodyData = _parseBodyData(await bodyContentFuture,
+        ContentType.fromString(request.headers['content-type'] ?? ""));
 
     for (var declaration in genericTypeMirror.type.declarations.values) {
       if (declaration is VariableMirror) {
@@ -62,7 +65,7 @@ abstract class SerializedDataController<T> extends BaseController {
           genericTypeMirror.setField(
               declaration.simpleName,
               TypeCaster.cast(
-                  parsedBodyData[annotation.fieldName ?? fieldNameToSet],
+                  parsedBodyData[annotation.fieldName ?? fieldNameToSet] ?? "",
                   targetType));
         } catch (e) {
           print(e);

@@ -9,7 +9,7 @@ void main() {
   setUp(() async {
     await TestProcess.start(
       'dart',
-      ['run', 'test/test_server.dart'],
+      ['run', 'test/test_application.dart'],
       environment: {'PORT': port},
     );
   });
@@ -21,9 +21,12 @@ void main() {
   });
 
   test("Serialize Data Test", () async {
+    var name = "John";
+    var age = "20";
     final response = await post(Uri.parse(host + '/post_data'),
-        body: {'name': 'John', 'age': '20'});
+        body: {'name': name, 'age': age});
     expect(response.statusCode, 200);
+    expect(response.body, "Data received: Person = $name - $age");
   });
 
   test('404', () async {
