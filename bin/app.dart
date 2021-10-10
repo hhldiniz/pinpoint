@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:mirrors';
 import 'dart:typed_data';
 
 import 'package:shelf/shelf.dart';
@@ -8,7 +7,6 @@ import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import 'controllers/base_controller.dart';
-import 'exceptions/not_implemented_exception.dart';
 import 'http_verbs.dart';
 
 //Represents the application

@@ -6,7 +6,7 @@ class HelloWorldController extends BaseController {
   HelloWorldController(String route) : super(route);
 
   @override
-  Response get(Request request) {
+  Future<Response> get(Request request) async {
     return Response.ok("Hello World");
   }
 }
