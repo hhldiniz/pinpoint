@@ -21,12 +21,13 @@ abstract class SerializedDataController<T> extends BaseController {
 
   Map<String, String> _parseBodyData(
       String rawBodyContent, ContentType contentType) {
-    print(rawBodyContent);
     Map<String, String> parsedResult = {};
     if (contentType is FormData) {
-      var mainContentPattern = RegExp("name=\"\\w+\"\n+\\w+");
+      var mainContentPattern = RegExp("name=\"\\w+\"", multiLine: true);
       mainContentPattern.allMatches(rawBodyContent).forEach((match) {
-        print(match);
+        var fieldName =
+            match.group(0)?.split("=")[1].replaceAll("\"", "") ?? "";
+        print(fieldName);
       });
     } else if (contentType is XWWFormUrlEncoded) {
       print(rawBodyContent);
@@ -45,6 +46,10 @@ abstract class SerializedDataController<T> extends BaseController {
     final InstanceMirror genericTypeMirror =
         reflect(Activator.createInstance(T));
 
+    Map<String, dynamic> parsedBodyData = _parseBodyData(
+              await bodyContentFuture,
+              ContentType.fromString(request.headers['content-type'] ?? ""));
+
     for (var declaration in genericTypeMirror.type.declarations.values) {
       if (declaration is VariableMirror) {
         try {
@@ -54,13 +59,10 @@ abstract class SerializedDataController<T> extends BaseController {
           Type targetType = declaration.type.reflectedType;
 
           var fieldNameToSet = MirrorSystem.getName(declaration.simpleName);
-          Map<String, dynamic> mockedData = _parseBodyData(
-              await bodyContentFuture,
-              ContentType.fromString(request.headers['content-type'] ?? ""));
           genericTypeMirror.setField(
               declaration.simpleName,
               TypeCaster.cast(
-                  mockedData[annotation.fieldName ?? fieldNameToSet],
+                  parsedBodyData[annotation.fieldName ?? fieldNameToSet],
                   targetType));
         } catch (e) {
           print(e);

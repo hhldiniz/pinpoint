@@ -17,7 +17,13 @@ void main() {
   test('Hello World', () async {
     final response = await get(Uri.parse(host + '/hello_world'));
     expect(response.statusCode, 200);
-    expect(response.body, 'Hello, World!\n');
+    expect(response.body, 'Hello World');
+  });
+
+  test("Serialize Data Test", () async {
+    final response = await post(Uri.parse(host + '/post_data'),
+        body: {'name': 'John', 'age': '20'});
+    expect(response.statusCode, 200);
   });
 
   test('404', () async {
