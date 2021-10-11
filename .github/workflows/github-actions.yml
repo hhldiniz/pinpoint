@@ -4,9 +4,9 @@ jobs:
   Run-Tests:
     runs-on: ubuntu-latest
     steps:
-      - run: apt install apt-transport-https
-      - run: sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
-      - run: sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
-      - run: apt update && apt install dart
+      - run: sudo apt install apt-transport-https
+      - run: sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
+      - run: sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
+      - run: sudo apt update && apt install dart
       - run: ls ${{ github.workspace }}
       - run: dart run ./test/server_test.dart
