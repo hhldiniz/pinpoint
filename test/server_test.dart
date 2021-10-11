@@ -9,7 +9,7 @@ void main() {
   setUp(() async {
     await TestProcess.start(
       'dart',
-      ['run', 'test/test_application.dart'],
+      ['run', '../reference/server.dart'],
       environment: {'PORT': port},
     );
   });

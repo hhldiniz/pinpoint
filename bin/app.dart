@@ -10,13 +10,13 @@ import 'controllers/base_controller.dart';
 import 'http_verbs.dart';
 
 //Represents the application
-class App {
+class PinpointApp {
   String? ipAddress;
   String? port;
 
   final List<BaseController> _controllers = [];
 
-  App({this.ipAddress, this.port});
+  PinpointApp({this.ipAddress, this.port});
 
   final _router = Router();
 
