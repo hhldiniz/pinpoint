@@ -9,6 +9,5 @@ jobs:
       - run: sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
       - run: sudo apt update && sudo apt install dart
       - name: Run Tests
-        working-directory: ./test
-        run: dart run server_test.dart
+        run: dart test
       
