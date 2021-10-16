@@ -1,5 +1,7 @@
 # Pinpoint Microframework
 
+![master_status_check](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=master)
+
 ## What it is
 Pinpoint is a microframework built on top of [shelf](https://pub.dev/packages/shelf). It enables you to make a more concise and organized backend application while provides you with some common utilities to use during development.
 
