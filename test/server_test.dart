@@ -1,20 +1,9 @@
-// import 'dart:io';
-
 import 'package:http/http.dart';
 import 'package:test/test.dart';
 
 void main() {
   final port = '8080';
   final host = 'http://0.0.0.0:$port';
-  // Process? serverProcess;
-
-/*   setUp(() async {
-    serverProcess = await Process.start(
-      'dart',
-      ['reference/server.dart'],
-      environment: {'PORT': port},
-    );
-  }); */
 
   test('Hello World', () async {
     // addTearDown(() => serverProcess?.kill());
