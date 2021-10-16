@@ -4,13 +4,13 @@ jobs:
   Run-Tests:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           sudo apt install apt-transport-https
           sudo sh -c 'wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -'
           sudo sh -c 'wget -qO- https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list'
           sudo apt update && sudo apt install dart
-      # - name: Run Tests
-      - uses: actions/checkout@v2
+      - name: Run Tests
         run: dart test
       
