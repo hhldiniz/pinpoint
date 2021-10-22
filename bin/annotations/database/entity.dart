@@ -1,5 +1,5 @@
 class Entity {
-  String tableName;
+  final String tableName;
 
-  Entity(this.tableName);
+  const Entity(this.tableName);
 }

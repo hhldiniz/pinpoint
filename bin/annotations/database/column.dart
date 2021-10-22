@@ -1,5 +1,5 @@
 class Column {
-  bool isPrimaryKey = false;
+  final bool isPrimaryKey;
 
-  Column({this.isPrimaryKey = false});
+  const Column({this.isPrimaryKey = false});
 }
