@@ -1,12 +1,10 @@
-import 'dao.dart';
+import 'dart:mirrors';
 
 class Database {
-  final List<Dao> _daoList;
+  final List<Type> entities;
+  final int version;
 
-  Database(this._daoList);
-
-  T getDao<T extends Dao>() {
-    return _daoList
-        .firstWhere((element) => element.runtimeType == T.runtimeType) as T;
-  }
+  const Database(this.entities, this.version);
 }
+
+abstract class PinpointDatabase {}
