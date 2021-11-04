@@ -9,6 +9,7 @@ class PostDataController extends SerializedDataController<Person> {
 
   @override
   Future<Response> postSerialized(Request request, Person model) async {
-    return Response.ok("Data received: Person = ${model.name} - ${model.age}");
+    return Response.ok(
+        "Data received: Person = ${model.name} - ${model.age} - ${model.occupation}");
   }
 }

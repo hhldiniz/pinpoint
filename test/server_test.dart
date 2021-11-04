@@ -13,17 +13,16 @@ void main() {
   });
 
   test("Serialize Data Test", () async {
-    // addTearDown(() => serverProcess?.kill());
     var name = "John";
     var age = "20";
+    var occupation = "Developer";
     final response = await post(Uri.parse(host + '/post_data'),
-        body: {'name': name, 'age': age});
+        body: {'name': name, 'age': age, 'occupation': occupation});
     expect(response.statusCode, 200);
-    expect(response.body, "Data received: Person = $name - $age");
+    expect(response.body, "Data received: Person = $name - $age - $occupation");
   });
 
   test('404', () async {
-    // addTearDown(() => serverProcess?.kill());
     final response = await get(Uri.parse(host + '/foobar'));
     expect(response.statusCode, 404);
   });

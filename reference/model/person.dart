@@ -6,4 +6,7 @@ class Person {
 
   @SerializedField("age")
   int? age;
+
+  @SerializedField()
+  String? occupation;
 }
