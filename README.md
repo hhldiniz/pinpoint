@@ -54,3 +54,64 @@ class HelloWorldController extends BaseController {
 6. Done! Now you just have to start your dart app as you would normally do. By calling `dart run my_dart_file.dart`.
 
 > Check the source code for a folder called 'reference'. Here you will find a simple implementation of the Pinpoint Framework.
+
+### Receiving Post data
+You may also want to receive post data. You could do it manually using `BaseController` and overring `post` method, but Pinpoint offers you an easy way to parse and serialize data from the request body using `SerializedDataController`.
+
+
+1. Create a Controller that extends `SerializedDataController`. This is a special controller that takes a type parameter. Here you can pass a model or leave it empty (dynamic). If you want to define a model do it like so:
+
+```dart 
+class ReceivePostDataController extends SerializedDataController<MyModel>
+```
+
+OR
+
+```dart 
+class ReceivePostDataController extends SerializedDataController
+```
+
+2. To get the parsed data from the request body you have to override `postSerialized` method. This methods gives you ther result 
+
+```dart
+class ReceivePostDataController extends SerializedDataController<MyModel>
+{
+  @override
+  Future<Response> postSerialized(Request request, MyModel model) async {
+    // your endpoint logic goes here
+  }
+}
+```
+If you didn't specify a model type
+
+```dart
+class ReceivePostDataController extends SerializedDataController
+{
+  @override
+  Future<Response> postSerialized(Request request, dynamic model) async {
+    // your endpoint logic goes here
+  }
+}
+```
+
+If you plan to define a model type you need to prepare it first.
+
+3. You need to annotate what fields you want during data serialization and, optionally define fields names as well.
+
+```dart
+class MyModel {
+
+  @SerializedField()
+  String? aField;
+
+  @SerializedField("fieldName")
+  int anotherField = 0;
+
+  double ignoredField = 0;
+}
+```
+> Since we're not defining a constructor for the model, we need to initialize all class variables. (this is true after dart implemented null-safety)
+
+4. Register your controller as shown above in 'Registering Controllers' section.
+
+Done! You now can receive and parse data in your application.
